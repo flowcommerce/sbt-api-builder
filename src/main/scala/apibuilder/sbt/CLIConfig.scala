@@ -1,7 +1,7 @@
 package apibuilder.sbt
 
 import java.io.{File, FileNotFoundException}
-import java.nio.file.{Path, PathMatcher}
+import java.nio.file.{FileSystems, Path, PathMatcher}
 
 import io.circe.Decoder
 import io.circe.yaml.parser
@@ -13,6 +13,9 @@ final case class ApplicationConfig(version: String, generators: Seq[GeneratorCon
 final case class GeneratorConfig(generator: String, maybeTargetPath: Option[Path], pathMatchers: Seq[PathMatcher])
 
 object CLIConfig extends BaseDecoders {
+
+  private val MatchAll = Seq(FileSystems.getDefault.getPathMatcher("glob:*"))
+
   final def load(f: File): Either[ConfigException, CLIConfig] =
     if (!f.getParentFile.exists) Left(MissingParentDirectory(f))
     else {
@@ -45,7 +48,7 @@ object CLIConfig extends BaseDecoders {
     for {
       generator       <- c.downField("generator").as[String]
       maybeTargetPath <- c.downField("target").as[Option[Path]]
-      pathMatchers    <- c.downField("files").as[Seq[PathMatcher]]
+      pathMatchers    <- c.downField("files").as[Option[Seq[PathMatcher]]].map(_.getOrElse(MatchAll))
     } yield GeneratorConfig(generator, maybeTargetPath, pathMatchers)
   }
 }

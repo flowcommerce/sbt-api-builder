@@ -13,5 +13,3 @@ code:
       generators:
         - generator: scala_models
           target: src/main/scala/internal
-          files:
-            - '*'
