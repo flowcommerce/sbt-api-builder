@@ -1,7 +1,6 @@
 package apibuilder.sbt
 
 import java.net.URL
-import java.nio.file.Paths
 
 import gigahorse.support.okhttp.Gigahorse
 import sbt.util.Logger
@@ -27,12 +26,13 @@ final class ApiBuilderClient(log: Logger, baseURL: URL, basicAuth: String) {
           .collect {
             case Valid(lastModified, codeFiles) =>
               codeFiles.map { cf =>
-                val filePath = target
-                  .filter(_.endsWith(cf.name))
-                  .orElse(cf.dir.map(_.resolve(cf.name)))
-                  .getOrElse(cf.name)
-
-                ApiBuilderResponse(lastModified, target, filePath, cf.contents)
+                target.collect {
+                  case t if t.toString.endsWith(cf.name.toString) =>
+                    ApiBuilderResponse(lastModified, Some(t.getParent), t.getFileName, cf.contents)
+                }.getOrElse {
+                  val filePath = cf.dir.map(_.resolve(cf.name)).getOrElse(cf.name)
+                  ApiBuilderResponse(lastModified, target, filePath, cf.contents)
+                }
               }
           }
       }.map(_.flatten)
