@@ -29,6 +29,10 @@ final class ApiBuilderClient(log: Logger, baseURL: URL, basicAuth: String) {
                 target.collect {
                   case t if t.toString.endsWith(cf.name.toString) =>
                     ApiBuilderResponse(lastModified, Some(t.getParent), t.getFileName, cf.contents)
+
+                  case _ =>
+                    ApiBuilderResponse(lastModified, target, cf.name, cf.contents)
+
                 }.getOrElse {
                   val filePath = cf.dir.map(_.resolve(cf.name)).getOrElse(cf.name)
                   ApiBuilderResponse(lastModified, target, filePath, cf.contents)
