@@ -7,3 +7,9 @@ code:
           target: src/main/scala/common
           files:
             - '*Mock*'
+  flow:
+    dependency:
+      version: latest
+      generators:
+        - generator: play_2_x_routes
+          target: src/main/resources/dependency.routes

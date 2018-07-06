@@ -4,4 +4,5 @@ $ exists src/main/scala/common/ApicollectiveApibuilderCommonV0ModelsOnly.scala
 $ exists src/main/scala/internal/ApicollectiveApibuilderInternalV0Models.scala
 > test
 $ exists src/main/scala/common/ApicollectiveApibuilderCommonV0MockClient.scala
+$ exists src/main/resources/dependency.routes
 > run

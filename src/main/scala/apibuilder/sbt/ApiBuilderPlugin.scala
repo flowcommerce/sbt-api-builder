@@ -28,8 +28,11 @@ object ApiBuilderPlugin extends AutoPlugin {
     val apiBuilderCLIConfigFilename =
       settingKey[String]("The name of the ApiBuilder CLI YAML config file (default: config)")
 
-    val apiBuilderUpdate =
+    val apiBuilderSourceUpdate =
       taskKey[Seq[File]]("Updates the classes generated from the model/api by fetching them remotely")
+
+    val apiBuilderResourceUpdate =
+      taskKey[Seq[File]]("Updates the resources generated from the model/api by fetching them remotely")
   }
 
   import autoImport._
@@ -46,11 +49,13 @@ object ApiBuilderPlugin extends AutoPlugin {
   private def rawSettings: Seq[Setting[_]] = Seq(
     apiBuilderCLIConfigDirectory := sourceDirectory.value / "apibuilder",
     apiBuilderCLIConfigFilename := "config",
-    apiBuilderUpdate := generate.value,
-    sourceGenerators += apiBuilderUpdate
+    apiBuilderSourceUpdate := generate(false).value,
+    apiBuilderResourceUpdate := generate(true).value,
+    sourceGenerators += apiBuilderSourceUpdate,
+    resourceGenerators += apiBuilderResourceUpdate
   )
 
-  def generate: Def.Initialize[Task[Seq[File]]] = Def.taskDyn {
+  def generate(resources: Boolean): Def.Initialize[Task[Seq[File]]] = Def.taskDyn {
     val log = streams.value.log
 
     Def.task {
@@ -81,7 +86,7 @@ object ApiBuilderPlugin extends AutoPlugin {
         case Some(t) => Right(new ApiBuilderClient(log, url, basicAuth(t)))
       }
 
-      val requestsOrError = logFileContents(localCLIConfigFile)(CLIConfig.load).map(ApiBuilderRequests.fromCLIConfig)
+      val requestsOrError = logFileContents(localCLIConfigFile)(CLIConfig.load).map(ApiBuilderRequests.fromCLIConfig(_, resources))
 
       val eventualResponses = (clientOrError, requestsOrError) match {
         case (Right(c), Right(r))                   => c.retrieveAll(r)
