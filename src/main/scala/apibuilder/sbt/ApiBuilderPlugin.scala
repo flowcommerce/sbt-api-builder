@@ -50,9 +50,7 @@ object ApiBuilderPlugin extends AutoPlugin {
     apiBuilderCLIConfigDirectory := sourceDirectory.value / "apibuilder",
     apiBuilderCLIConfigFilename := "config",
     apiBuilderSourceUpdate := generate(false).value,
-    apiBuilderResourceUpdate := generate(true).value,
-    sourceGenerators += apiBuilderSourceUpdate,
-    resourceGenerators += apiBuilderResourceUpdate
+    apiBuilderResourceUpdate := generate(true).value
   )
 
   def generate(resources: Boolean): Def.Initialize[Task[Seq[File]]] = Def.taskDyn {
