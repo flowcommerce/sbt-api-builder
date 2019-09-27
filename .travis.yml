@@ -5,7 +5,7 @@ scala:
 script:
 - sbt -Dfile.encoding=UTF8 test scripted
 jdk:
-- oraclejdk8
+  - openjdk8
 after_success:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION releaseEarly;
   fi
@@ -14,8 +14,6 @@ addons:
     packages:
     - oracle-java8-installer
 before_cache:
-- find $HOME/.sbt -name "*.lock" | xargs rm
-- find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 cache:
   directories:
   - "$HOME/.ivy2/cache"
@@ -30,3 +28,7 @@ env:
   - secure: nEF80rzjIWTpltdNQJdVFoHkWgsf4SQjKuqs1PKd2U53o7mJaVH2osU/52tESnr9fGuyw/L2mDBlyANQ5FMoOpoeFEIdLyIPG7qKCbWgSZUwipzbC3nwLqBjR5KJnVi09egrIbaxmfEHivxNOJooe2bzLWZZJHH/cY1GiEzEZ18bSOCJA6rWqXULtjRyr+FrCnTypZs0FnEMDAO/r9MdVZY0UbBixPcGhnlEwrq1xpKI97pPBsqdonrvrQZOQQ75URF+pO7JvsshG0IiMv3PWvBvSBqnQmineb9H8l29jLU/sUqYkTlxyfuzzfCQhVklT5ITaV3aY8BY6m+VwPXbAA1jeMKzW5QeOR2XzDD8JyHXEZZTAziRsHp+wWcRAG7CPxqHctwYPp0mrm7yqzeAEVthtF0hCNFnIQdrZtxnk0Ov3kfR0BH5tCdXEauEeuGGT5P3brNKoIRlR32soW69V3ufcaOj8j+RkyfvYocGTP9OPT0r6UzN3BENbxoGAec/FCPBkLVN15XkJp+ww4mk5juZyki9ZTcGjumRQILXZgUB9A1BVPqw4+h7aRgZZDsR/crEAQzFBCyJ8CG7gxsunKsY2QyTUcMQAGlcdQay1UqzGTPdHqs4OYoyxPH5fJhQE4uAsfYCBH2Rwg+WhnYtQiuDGsNxXArEj7W99XdWdJw=
   - secure: kiIMfCXaWGbbq+1Ts7nqdCYmiWAL3xFauer5aGPkSGDJAKVjGqtBSidLfuqFTlO5qoF1YdoPkDyC4G8ktX9ZeYrotxeSOmquHrmIH7/oJpl5J/3YMCegXpvMeuhLZHD4nb/ZYo3TqoCs+Yj0mmw+wPxVE9tF/JTRWaFMsjKyCE6ftnN5JGv34xRfteWkcmO9wtX38trSDnUiABQRUjzeHifUp6DMkjVZASAjaWdsEXGMTxCrpksM7Rae51cLoWAv8eUfoqvKUFz/4/HaKU+OEV7243HpbOmwUTxt61S4qKyo3PfexB1lK/5qCiA7JULzjt4SXCcl96R+gekynZaQ9DXKbvEC6FyeKJzrp64wsmY2JTyuowRwPgoVJP1ALN9AJ/QVpq+Aly6fJ8lWn5LF6P+eUv8AhDMzwMnTpczUjSCFUYNNv+x8MVxGyx5+scKxkiPnvDpHLhlSexhFhv6x7nxfVVDSrxtfsfVe4zD247PMCn3UDW5vWnULqx4krVO6xp3pWfgMkvDzyYNJ3F8X353v8EfgVGeGh2NJpOH/kKGOfoTn7S++TOi0SG1ya9KxSa4oDvOdiVUwFY7ZVBzjMr6j6EtmwoitACxmecQ4eWEhmO7tfP/a0+riG0wz9AbOTxYHBlO+Uj1WiYfbZSEkzPMw9Aact6qLRqOD55z0sYo=
   - secure: awT1tZRBEvbZB2bgb+stv+Jp3KjCImXnpKd/qmiHvS1+kxyRrAXAE3KHcHKut7FAlJobmLdvlCMkCPizV5FfFQMbqQR7/SokXvyK6rxx+0gc8xxcdDw6nDETDte7l+PUSw8mJ1yytrnamaTpKiX5JEXN2O5zgLkwCpnC3117rMXojiEa7vZvJ06nF8EVi+PYFuiCy0kWobuLYhpS0DQwQsLAIl3nsDHbPeFqwWX9vvlihpUjBWFP2L7U5aeVpdMkpQ+8mdtzewyIXGIq7cGpJzAsGDVME5bvv3N8+OF+Mbc1DKBa4z5h0KGtesq0fXPSJ11A/znezaDBEAvoReSKzxcTgcDqQRHQfRQH4KLEZ8Y78OZbngUCtl7BNFbZ7KFD+QxuhhGw3BdyWsUoadaNuQz3ODlFPl3LIXkEZeDe+kk8wG8AIrdtVM1dWFS4xuUod8jfUYUDtQAm3ZvnnIvlAh5Hh1pSBagBitftk+FW+VP2RCcWATKPusdae1fXTgoqtHMmDcvD7XT//Ybe5UMs2RfYHM4ycAzN/iHFncfVOQhsCBEc4SoWGcWRM6EqZPT6KZx7zMUGyvH+A5QcdzdEqZohSqQkc0CQmwdRcHlBIbSYBLzbaZ/jYd3o2a7pGAXnFFWGDfHb6tf4psXiJxvopGwNkGTCsd1Sh++Eb2yjq60=
+before_cache:
+  - rm -fv $HOME/.ivy2/.sbt.ivy.lock
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete
