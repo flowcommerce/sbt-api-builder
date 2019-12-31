@@ -11,10 +11,6 @@ jdk:
 after_success:
 - if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION releaseEarly;
   fi
-addons:
-  apt:
-    packages:
-    - oracle-java8-installer
 cache:
   directories:
   - $HOME/.ivy2/cache
